@@ -47,7 +47,11 @@ def run_experiments(args, save_dir):
             s_j = max(results.keys())
             logging.info("Experiment will be resumed from #{}".format(s_j))
         
-        for j in range(0, trials):
+        if s_j == trials - 1:
+            logging.info("No more trials required for {}".format(alg))
+            continue
+
+        for j in range(s_j, trials):
             # run NAS algorithm
             result = {}
             result['error'] = []
