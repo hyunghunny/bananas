@@ -33,7 +33,7 @@ class Data:
         if loaded_nasbench:
             self.nasbench = loaded_nasbench
         elif search_space == 'nasbench':
-                self.nasbench = api.NASBench(nasbench_folder + 'nas_bench/nasbench_only108.tfrecord')
+                self.nasbench = api.NASBench(nasbench_folder + 'nas_bench/nasbench_full.tfrecord')
         elif search_space == 'nasbench_201':
             self.nasbench = API(nasbench_folder + 'nas_bench_201/NAS-Bench-201-v1_1-096897.pth')
         elif search_space != 'darts':

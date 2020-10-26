@@ -25,8 +25,8 @@ If you run experiments on DARTS, you will need our fork of the darts repo:
 
 
 ## Train a meta neural network with a notebook on the NASBench dataset
-- Download the nasbench_only108 tfrecord file (size 499MB) [here](https://storage.googleapis.com/nasbench/nasbench_only108.tfrecord)
-- Place `nasbench_only108.tfrecord` in the top level folder of this repo
+- Download the nasbench_full tfrecord file [here](https://storage.googleapis.com/nasbench/nasbench_full.tfrecord)
+- Place `nasbench_only108.tfrecord` in the nas_bench folder
 - Open and run `meta_neuralnet.ipynb` to reproduce Table 1 and Figure A.1 of our paper
 
 <p align="center">
