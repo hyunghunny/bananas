@@ -3,6 +3,7 @@ import os
 import pickle
 import sys
 import copy
+import time
 import numpy as np
 import tensorflow as tf
 from argparse import Namespace
@@ -61,8 +62,8 @@ def compute_best_test_losses(data, k, total_queries, loss):
 def random_search(search_space,
                   total_queries=150, 
                   loss='val_loss',
-                  deterministic=True,
-                  verbose=1):
+                  deterministic=False,
+                  verbose=False):
     """ 
     random search
     """
@@ -78,15 +79,15 @@ def random_search(search_space,
 
 def evolution_search(search_space,
                      total_queries=150,
-                     num_init=10,
+                     num_init=100,
                      k=10,
                      loss='val_loss',
-                     population_size=30,                       
-                     tournament_size=10,
+                     population_size=10,                       
+                     tournament_size=1,
                      mutation_rate=1.0, 
-                     deterministic=True,
+                     deterministic=False,
                      regularize=True,
-                     verbose=1):
+                     verbose=False):
     """
     regularized evolution
     """
@@ -98,7 +99,7 @@ def evolution_search(search_space,
     population = [i for i in range(min(num_init, population_size))]
 
     while query <= total_queries:
-
+        s_time = time.time()
         # evolve the population by mutating the best architecture
         # from a random subset of the population
         sample = np.random.choice(population, tournament_size)
@@ -106,6 +107,7 @@ def evolution_search(search_space,
         mutated = search_space.mutate_arch(data[best_index]['spec'],
                                            mutation_rate=mutation_rate)
         arch_dict = search_space.query_arch(mutated, deterministic=deterministic)
+        arch_dict['opt_time'] = time.time() - s_time
         data.append(arch_dict)        
         losses.append(arch_dict[loss])
         population.append(len(data) - 1)
@@ -140,8 +142,8 @@ def bananas(search_space,
             explore_type='its',
             encoding_type='trunc_path',
             cutoff=40,
-            deterministic=True,
-            verbose=1):
+            deterministic=False,
+            verbose=False):
     """
     Bayesian optimization with a neural network model
     """
@@ -156,7 +158,7 @@ def bananas(search_space,
     query = num_init + k
 
     while query <= total_queries:
-
+        s_time = time.time()
         xtrain = np.array([d['encoding'] for d in data])
         ytrain = np.array([d[loss] for d in data])
 
@@ -204,6 +206,8 @@ def bananas(search_space,
                                                 encoding_type=encoding_type,
                                                 cutoff=cutoff,
                                                 deterministic=deterministic)
+            arch_dict['opt_time'] = time.time() - s_time
+            s_time = time.time()
             data.append(arch_dict)
 
         if verbose:
@@ -222,7 +226,7 @@ def gp_bayesopt_search(search_space,
                         k=10,
                         total_queries=150,
                         distance='edit_distance',
-                        deterministic=True,
+                        deterministic=False,
                         tmpdir='./temp',
                         max_iter=200,
                         mode='single_process',
@@ -292,7 +296,7 @@ def dngo_search(search_space,
                 cutoff=40,
                 acq_opt_type='mutation',
                 explore_type='ucb',
-                deterministic=True,
+                deterministic=False,
                 verbose=True):
 
     import torch

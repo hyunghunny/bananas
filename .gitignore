@@ -20,3 +20,6 @@ nasbench_only108.tfrecord
 *data.pkl
 *log.txt
 
+results_output/*
+nas_bench_201/*.pth
+results/*

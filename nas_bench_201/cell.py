@@ -38,7 +38,19 @@ class Cell:
 
 
     def get_runtime(self, nasbench, dataset='cifar100'):
-        return nasbench.query_by_index(index, dataset).get_eval('x-valid')['time']
+        if dataset == 'cifar10':
+            dataset = 'cifar10-valid'
+        index = nasbench.query_index_by_arch(self.string)
+        train_info = nasbench.get_more_info(index, dataset, hp='200', is_random=True)
+        t_time = train_info['train-all-time']
+        if 'valid-accuracy' in train_info:
+            t_time += train_info['valid-per-time']
+
+        if 'test-accuracy' in train_info:
+            t_time += train_info['test-per-time']
+
+
+        return t_time
 
     def get_val_loss(self, nasbench, deterministic=1, dataset='cifar100'):
         index = nasbench.query_index_by_arch(self.string)

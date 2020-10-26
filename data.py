@@ -2,16 +2,17 @@ import numpy as np
 import pickle
 import sys
 import os
+import time
 
 if 'search_space' not in os.environ or os.environ['search_space'] == 'nasbench':
-    from nasbench import api
+    from lookup.nas101bench import api
     from nas_bench.cell import Cell
 
 elif os.environ['search_space'] == 'darts':
     from darts.arch import Arch
 
 elif os.environ['search_space'][:12] == 'nasbench_201':
-    from nas_201_api import NASBench201API as API
+    from lookup.nas201bench.nas_201_api import NASBench201API as API
     from nas_bench_201.cell import Cell
 
 else:
@@ -32,9 +33,9 @@ class Data:
         if loaded_nasbench:
             self.nasbench = loaded_nasbench
         elif search_space == 'nasbench':
-                self.nasbench = api.NASBench(nasbench_folder + 'nasbench_only108.tfrecord')
+                self.nasbench = api.NASBench(nasbench_folder + 'nas_bench/nasbench_only108.tfrecord')
         elif search_space == 'nasbench_201':
-            self.nasbench = API(os.path.expanduser('~/nas-bench-201/NAS-Bench-201-v1_0-e61699.pth'))
+            self.nasbench = API(nasbench_folder + 'nas_bench_201/NAS-Bench-201-v1_1-096897.pth')
         elif search_space != 'darts':
             print(search_space, 'is not a valid search space')
             sys.exit()
@@ -47,11 +48,17 @@ class Data:
                    train=True, 
                    encoding_type='path', 
                    cutoff=-1,
-                   deterministic=True, 
-                   epochs=0):
+                   deterministic=False, 
+                   epochs=None,
+                   opt_time=0.0):
 
         arch_dict = {}
-        arch_dict['epochs'] = epochs
+        if epochs == None:
+            if self.search_space == 'nasbench':
+                epochs = 108
+            elif self.search_space == 'nasbench_201':
+                epochs = 200         
+        
         if self.search_space in ['nasbench', 'nasbench_201']:
             if arch is None:
                 arch = Cell.random_cell(self.nasbench)
@@ -70,11 +77,13 @@ class Data:
             arch_dict['encoding'] = encoding
 
             if train:
+                
                 arch_dict['val_loss'] = Cell(**arch).get_val_loss(self.nasbench, 
                                                                     deterministic=deterministic,
                                                                     dataset=self.dataset)
-                arch_dict['test_loss'] = Cell(**arch).get_test_loss(self.nasbench,
-                                                                    dataset=self.dataset)
+                arch_dict['test_loss'] = Cell(**arch).get_test_loss(self.nasbench, dataset=self.dataset)
+                arch_dict['training_time'] = Cell(**arch).get_runtime(self.nasbench, dataset=self.dataset)
+                arch_dict['opt_time'] = opt_time                
                 arch_dict['num_params'] = Cell(**arch).get_num_params(self.nasbench)
                 arch_dict['val_per_param'] = (arch_dict['val_loss'] - 4.8) * (arch_dict['num_params'] ** 0.5) / 100
 
@@ -94,10 +103,12 @@ class Data:
             arch_dict['encoding'] = encoding
 
             if train:
-                if epochs == 0:
+                if epochs == None:
                     epochs = 50
                 arch_dict['val_loss'], arch_dict['test_loss'] = Arch(arch).query(epochs=epochs)
-        
+            
+        arch_dict['epochs'] = epochs
+
         return arch_dict           
 
     def mutate_arch(self, 

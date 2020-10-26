@@ -59,6 +59,10 @@ class Cell:
                     'ops': ops
                 }
 
+    def get_runtime(self, nasbench, dataset=None):
+        runtime = nasbench.query(api.ModelSpec(matrix=self.matrix, ops=self.ops))['final_training_time']
+        return runtime
+
     def get_val_loss(self, nasbench, deterministic=1, patience=50, epochs=None, dataset=None):
         if not deterministic:
             # output one of the three validation accuracies at random
