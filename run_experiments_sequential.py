@@ -82,7 +82,7 @@ def run_experiments(args, save_dir):
                 json_file.write(json.dumps(results))
             
             walltime = time.time()-starttime
-            logging.info("trial #{} takes {:.1f} sec".format(j, walltime))
+            logging.info("{} - trial #{} takes {:.1f} sec".format(alg, j, walltime))
 
 
 def main(args):
