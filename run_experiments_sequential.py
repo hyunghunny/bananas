@@ -36,7 +36,7 @@ def run_experiments(args, save_dir):
         #walltimes = []
         #run_data = []
         alg = algorithm_params[i]
-        logging.info('[{}/{}] Running algorithm: {}'.format(alg, i, num_algos))
+        logging.info('[{}/{}] Running algorithm: {}'.format(i, num_algos, alg))
         filename = os.path.join(save_dir, '{}_{}_{}-{}.json'.format(alg['algo_name'], alg['total_queries'], 
                                                                     args.save_type, trials))
         for j in range(trials):

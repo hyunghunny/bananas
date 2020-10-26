@@ -12,7 +12,7 @@ BANANAS is a neural architecture search (NAS) algorithm which uses Bayesian opti
 </p>
 
 ## Requirements
-- jupyter
+- matplotlib
 - tensorflow == 1.14.0 (used for all experiments)
 - nasbench (follow the installation instructions [here](https://github.com/google-research/nasbench))
 - nas-bench-201 (follow the installation instructions [here](https://github.com/D-X-Y/NAS-Bench-201))

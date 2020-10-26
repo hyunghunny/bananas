@@ -37,11 +37,11 @@ class Cell:
         return {'string':cls.get_string_from_ops(ops)}
 
 
-    def get_runtime(self, nasbench, dataset='cifar100'):
+    def get_runtime(self, nasbench, dataset, epochs=200):
         if dataset == 'cifar10':
             dataset = 'cifar10-valid'
         index = nasbench.query_index_by_arch(self.string)
-        train_info = nasbench.get_more_info(index, dataset, hp='200', is_random=True)
+        train_info = nasbench.get_more_info(index, dataset, hp=str(epochs), is_random=True)
         t_time = train_info['train-all-time']
         if 'valid-accuracy' in train_info:
             t_time += train_info['valid-per-time']
@@ -52,12 +52,11 @@ class Cell:
 
         return t_time
 
-    def get_val_loss(self, nasbench, deterministic=1, dataset='cifar100'):
+    def get_val_loss(self, nasbench, dataset, deterministic=1, epochs=200):
         index = nasbench.query_index_by_arch(self.string)
         if dataset == 'cifar10':
-            results = nasbench.query_by_index(index, 'cifar10-valid')
-        else:
-            results = nasbench.query_by_index(index, dataset)
+            dataset = 'cifar10-valid'
+        results = nasbench.query_by_index(index, dataset, hp=str(epochs))
 
         accs = []
         for key in results.keys():
@@ -68,9 +67,9 @@ class Cell:
         else:
             return round(100-np.random.choice(accs), 10)
 
-    def get_test_loss(self, nasbench, dataset='cifar100', deterministic=1):
+    def get_test_loss(self, nasbench, dataset, deterministic=1, epochs=200):
         index = nasbench.query_index_by_arch(self.string)
-        results = nasbench.query_by_index(index, dataset)
+        results = nasbench.query_by_index(index, dataset, hp=str(epochs))
 
         accs = []
         for key in results.keys():
