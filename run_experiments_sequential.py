@@ -39,7 +39,15 @@ def run_experiments(args, save_dir):
         logging.info('[{}/{}] Running algorithm: {}'.format(i+1, num_algos, alg))
         filename = os.path.join(save_dir, '{}_{}_{}-{}.json'.format(alg['algo_name'], alg['total_queries'], 
                                                                     args.save_type, trials))
-        for j in range(trials):
+        s_j = 0
+        # TODO:load previous results
+        if os.path.exists(filename):
+            with open(filename, 'r') as json_file:
+                results = json.load(json_file)
+            s_j = max(results.keys())
+            logging.info("Experiment will be resumed from #{}".format(s_j))
+        
+        for j in range(0, trials):
             # run NAS algorithm
             result = {}
             result['error'] = []
@@ -69,15 +77,13 @@ def run_experiments(args, save_dir):
                         d.pop(key)
 
             results[str(j)] = result
-            # add walltime, results, run_data
+            # saving JSON result
+            with open(filename, 'w') as json_file:
+                json_file.write(json.dumps(results))
+            
             walltime = time.time()-starttime
             logging.info("trial #{} takes {:.1f} sec".format(j, walltime))
-            #results.append(algo_result)
-            #run_data.append(run_datum)
-        
-        # saving JSON result
-        with open(filename, 'w') as json_file:
-            json_file.write(json.dumps(results))
+
 
 def main(args):
 

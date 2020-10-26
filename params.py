@@ -35,7 +35,10 @@ def algo_params(param_str):
 
     elif param_str == 'dngo':
         params.append({'algo_name':'dngo', 'total_queries':1500})
-
+    
+    elif param_str == 'gp':
+        params.append({'algo_name':'gp_bayesopt', 'total_queries':1500})
+    
     elif param_str == 'main_experiments':
         params.append({'algo_name':'random', 'total_queries':150})
         params.append({'algo_name':'evolution', 'total_queries':150})
