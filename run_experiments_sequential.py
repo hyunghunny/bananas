@@ -39,55 +39,62 @@ def run_experiments(args, save_dir):
         logging.info('[{}/{}] Running algorithm: {}'.format(i+1, num_algos, alg))
         filename = os.path.join(save_dir, '{}_{}_{}-{}.json'.format(alg['algo_name'], alg['total_queries'], 
                                                                     args.save_type, trials))
+        tmpname = os.path.join(save_dir, '{}_{}_{}-{}.json.tmp'.format(alg['algo_name'], alg['total_queries'], 
+                                                                    args.save_type, trials))
         s_j = 0
         # TODO:load previous results
-        if os.path.exists(filename):
-            with open(filename, 'r') as json_file:
+        if os.path.exists(tmpname):
+            with open(tmpname, 'r') as json_file:
                 results = json.load(json_file)
             s_j = max(results.keys())
             logging.info("Experiment will be resumed from #{}".format(s_j))
         
-        if s_j == trials - 1:
-            logging.info("No more trials required for {}".format(alg))
-            continue
+        if os.path.exists(filename):
+            logging.info("Experiment already saved! No more trials required for {}".format(alg))
+        else:
+            for j in range(s_j, trials):
+                # run NAS algorithm
+                result = {}
+                result['error'] = []
+                result['exec_time'] = []
+                result['opt_time'] = []
+                result['train_epoch'] = []
 
-        for j in range(s_j, trials):
-            # run NAS algorithm
-            result = {}
-            result['error'] = []
-            result['exec_time'] = []
-            result['opt_time'] = []
-            result['train_epoch'] = []
+                starttime = time.time()
+                algo_result, run_datum = run_nas_algorithm(alg, search_space, mp)
+                #algo_result = np.round(algo_result, 5)
 
-            starttime = time.time()
-            algo_result, run_datum = run_nas_algorithm(alg, search_space, mp)
-            #algo_result = np.round(algo_result, 5)
+                # remove unnecessary dict entries that take up space
+                for d in run_datum:
+                    if args.save_type == 'valid':
+                        result['error'].append(d['val_loss'] / 100.0)
+                    elif args.save_type == 'test':
+                        result['error'].append(d['test_loss'] / 100.0)
+                    
+                    result['opt_time'].append(d['opt_time'])
+                    result['exec_time'].append(d['training_time'])                
+                    result['train_epoch'].append(d['epochs'])
 
-            # remove unnecessary dict entries that take up space
-            for d in run_datum:
-                if args.save_type == 'valid':
-                    result['error'].append(d['val_loss'] / 100.0)
-                elif args.save_type == 'test':
-                    result['error'].append(d['test_loss'] / 100.0)
+                    if not save_specs:
+                        d.pop('spec')
+                    for key in ['encoding', 'adjacency', 'path', 'dist_to_min']:
+                        if key in d:
+                            d.pop(key)
+
+                results[str(j)] = result
+                # saving temporary JSON result
+                with open(tmpname, 'w') as json_file:
+                    json_file.write(json.dumps(results))
                 
-                result['opt_time'].append(d['opt_time'])
-                result['exec_time'].append(d['training_time'])                
-                result['train_epoch'].append(d['epochs'])
-
-                if not save_specs:
-                    d.pop('spec')
-                for key in ['encoding', 'adjacency', 'path', 'dist_to_min']:
-                    if key in d:
-                        d.pop(key)
-
-            results[str(j)] = result
-            # saving JSON result
+                walltime = time.time()-starttime
+                logging.info("{} - trial #{} takes {:.1f} sec".format(alg, j, walltime))
+            
+            # saving final JSON result
             with open(filename, 'w') as json_file:
                 json_file.write(json.dumps(results))
-            
-            walltime = time.time()-starttime
-            logging.info("{} - trial #{} takes {:.1f} sec".format(alg, j, walltime))
-
+        
+        if os.path.exists(tmpname):
+            os.remove(tmpname)
 
 def main(args):
 
