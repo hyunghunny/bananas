@@ -22,7 +22,6 @@ def algo_params(param_str):
         params.append({'algo_name':'random', 'total_queries':3000})
         params.append({'algo_name':'evolution', 'total_queries':3000})
         params.append({'algo_name':'bananas', 'total_queries':1000})
-        params.append({'algo_name':'dngo', 'total_queries':1000})
 
     elif param_str == 'random': 
         params.append({'algo_name':'random', 'total_queries':3000})
