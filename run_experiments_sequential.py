@@ -46,7 +46,7 @@ def run_experiments(args, save_dir):
         if os.path.exists(tmpname):
             with open(tmpname, 'r') as json_file:
                 results = json.load(json_file)
-            s_j = max(results.keys())
+            s_j = max([int(k) for k in results.keys()])
             logging.info("Experiment will be resumed from #{}".format(s_j))
         
         if os.path.exists(filename):
@@ -121,8 +121,8 @@ def main(args):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Args for BANANAS experiments')
-    parser.add_argument('--trials', type=int, default=100, help='Number of trials')
-    parser.add_argument('--search_space', type=str, default='nasbench_201_cifar10', \
+    parser.add_argument('--trials', type=int, default=50, help='Number of trials')
+    parser.add_argument('--search_space', type=str, default='nasbench_201_cifar100', \
         help='nasbench or darts')
     parser.add_argument('--algo_params', type=str, default='bananas', help='which parameters to use')
     #parser.add_argument('--output_filename', type=str, default='round', help='name of output files')
