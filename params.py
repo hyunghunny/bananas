@@ -21,8 +21,8 @@ def algo_params(param_str):
     elif param_str == 'all_bench': 
         params.append({'algo_name':'random', 'total_queries':3000})
         params.append({'algo_name':'evolution', 'total_queries':3000})
-        params.append({'algo_name':'bananas', 'total_queries':1500})
-        params.append({'algo_name':'dngo', 'total_queries':1500})
+        params.append({'algo_name':'bananas', 'total_queries':1000})
+        params.append({'algo_name':'dngo', 'total_queries':1000})
 
     elif param_str == 'random': 
         params.append({'algo_name':'random', 'total_queries':3000})
@@ -31,13 +31,13 @@ def algo_params(param_str):
         params.append({'algo_name':'evolution', 'total_queries':3000})
 
     elif param_str == 'bananas':
-        params.append({'algo_name':'bananas', 'total_queries':1500, 'verbose':0})
+        params.append({'algo_name':'bananas', 'total_queries':1000, 'verbose':0})
 
     elif param_str == 'dngo':
-        params.append({'algo_name':'dngo', 'total_queries':1500})
+        params.append({'algo_name':'dngo', 'total_queries':1000})
     
     elif param_str == 'gp':
-        params.append({'algo_name':'gp_bayesopt', 'total_queries':1500})
+        params.append({'algo_name':'gp_bayesopt', 'total_queries':1000})
     
     elif param_str == 'main_experiments':
         params.append({'algo_name':'random', 'total_queries':150})

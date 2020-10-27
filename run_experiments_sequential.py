@@ -124,7 +124,7 @@ if __name__ == "__main__":
     parser.add_argument('--trials', type=int, default=100, help='Number of trials')
     parser.add_argument('--search_space', type=str, default='nasbench_201_cifar100', \
         help='nasbench or darts')
-    parser.add_argument('--algo_params', type=str, default='all_bench', help='which parameters to use')
+    parser.add_argument('--algo_params', type=str, default='re', help='which parameters to use')
     #parser.add_argument('--output_filename', type=str, default='round', help='name of output files')
     parser.add_argument('--save_type', type=str, default='valid', help='set valid or test')
     parser.add_argument('--save_dir', type=str, default='results', help='name of save directory')
