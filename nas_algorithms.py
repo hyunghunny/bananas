@@ -297,7 +297,7 @@ def dngo_search(search_space,
                 acq_opt_type='mutation',
                 explore_type='ucb',
                 deterministic=False,
-                verbose=True):
+                verbose=False):
 
     import torch
     from pybnn import DNGO
