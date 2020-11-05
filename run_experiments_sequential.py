@@ -122,10 +122,9 @@ def main(args):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Args for BANANAS experiments')
     parser.add_argument('--trials', type=int, default=100, help='Number of trials')
-    parser.add_argument('--search_space', type=str, default='nasbench_201_imagenet', \
+    parser.add_argument('--search_space', type=str, default='nasbench', \
         help='nasbench or darts')
     parser.add_argument('--algo_params', type=str, default='bananas', help='which parameters to use')
-    #parser.add_argument('--output_filename', type=str, default='round', help='name of output files')
     parser.add_argument('--save_type', type=str, default='valid', help='set valid or test')
     parser.add_argument('--save_dir', type=str, default='results', help='name of save directory')
     parser.add_argument('--save_specs', type=bool, default=False, help='save the architecture specs')    
