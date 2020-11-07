@@ -6,7 +6,7 @@ import sys
 import os
 import pickle
 
-from nasbench import api
+from lookup.nas101bench import api
 
 
 INPUT = 'input'
