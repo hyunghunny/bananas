@@ -60,7 +60,10 @@ class Cell:
                 }
 
     def get_runtime(self, nasbench, dataset=None):
-        runtime = nasbench.query(api.ModelSpec(matrix=self.matrix, ops=self.ops))['final_training_time']
+        tr = nasbench.query(api.ModelSpec(matrix=self.matrix, ops=self.ops))
+        runtime = 0.0
+        if type(tr) == dict and 'final_training_time' in tr:
+            runtime = ['final_training_time']
         return runtime
 
     def get_val_loss(self, nasbench, deterministic=1, patience=50, epochs=None, dataset=None):
