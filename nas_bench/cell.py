@@ -65,7 +65,7 @@ class Cell:
         if type(tr) == dict and 'training_time' in tr:
             runtime = ['training_time']
         else:
-            print("No training_time!: {}".format(tr.keys()))
+            print("No training_time attribute in : {}".format(tr.keys()))
         return runtime
 
     def get_val_loss(self, nasbench, deterministic=1, patience=50, epochs=None, dataset=None):
