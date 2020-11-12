@@ -63,7 +63,7 @@ class Cell:
         tr = nasbench.query(api.ModelSpec(matrix=self.matrix, ops=self.ops))
         runtime = 0.0
         if type(tr) == dict and 'training_time' in tr:
-            runtime = ['training_time']
+            runtime = tr['training_time']
         else:
             print("No training_time attribute in : {}".format(tr.keys()))
         return runtime
