@@ -150,6 +150,8 @@ def bananas(search_space,
     from acquisition_functions import acq_fn
     from meta_neural_net import MetaNeuralnet
 
+    print("Encoding type: {}".format(encoding_type))
+
     data = search_space.generate_random_dataset(num=num_init, 
                                                 encoding_type=encoding_type, 
                                                 cutoff=cutoff,
