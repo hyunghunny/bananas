@@ -37,10 +37,16 @@ def run_experiments(args, save_dir):
         #run_data = []
         alg = algorithm_params[i]
         logging.info('[{}/{}] Running algorithm: {}'.format(i+1, num_algos, alg))
-        filename = os.path.join(save_dir, '{}_{}_{}-{}.json'.format(alg['algo_name'], alg['total_queries'], 
-                                                                    args.save_type, trials))
-        tmpname = os.path.join(save_dir, '{}_{}_{}-{}.json.tmp'.format(alg['algo_name'], alg['total_queries'], 
-                                                                    args.save_type, trials))
+        if 'encoding_type' in alg:
+            filename = os.path.join(save_dir, '{}_{}_{}_{}-{}.json'.format(alg['algo_name'], alg['encoding_type'], alg['total_queries'], 
+                                                                        args.save_type, trials))
+            tmpname = os.path.join(save_dir, '{}_{}_{}_{}-{}.json.tmp'.format(alg['algo_name'], alg['encoding_type'], alg['total_queries'], 
+                                                                        args.save_type, trials))
+        else:
+            filename = os.path.join(save_dir, '{}_{}_{}-{}.json'.format(alg['algo_name'], alg['total_queries'], 
+                                                                        args.save_type, trials))
+            tmpname = os.path.join(save_dir, '{}_{}_{}-{}.json.tmp'.format(alg['algo_name'], alg['total_queries'], 
+                                                                                    args.save_type, trials))
         s_j = 0
         # TODO:load previous results
         if os.path.exists(tmpname):

@@ -30,7 +30,7 @@ def algo_params(param_str):
         params.append({'algo_name':'evolution', 'total_queries':3000})
 
     elif param_str == 'bananas':
-        params.append({'algo_name':'bananas', 'total_queries':1000, 'verbose':0})
+        params.append({'algo_name':'bananas', 'total_queries':1000, 'verbose':0, 'encoding_type': 'trunc_path'})
 
     elif param_str == 'bananas_adj':
         params.append({'algo_name':'bananas', 'total_queries':1000, 'verbose':0, 'encoding_type': 'adj' })
