@@ -32,6 +32,10 @@ def algo_params(param_str):
     elif param_str == 'bananas':
         params.append({'algo_name':'bananas', 'total_queries':1000, 'verbose':0})
 
+    elif param_str == 'bananas_adj':
+        params.append({'algo_name':'bananas', 'total_queries':1000, 'verbose':0, 'encoding_type': 'adj' })
+
+
     elif param_str == 'dngo':
         params.append({'algo_name':'dngo', 'total_queries':1000})
     
