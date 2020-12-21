@@ -187,6 +187,28 @@ class Cell:
             encoding[-i] = dic[self.ops[i]]
         return tuple(encoding)
 
+    def encode_standard2(self):
+        """ 
+        compute the "standard" encoding,
+        i.e. adjacency matrix + (one-hot coded) op list encoding 
+        """
+        encoding_length = (NUM_VERTICES ** 2 - NUM_VERTICES) // 2 + (OP_SPOTS * 3)
+        encoding = np.zeros((encoding_length))
+        dic = {CONV1X1: [0, 0, 0], CONV3X3: [0, 1, 0], MAXPOOL3X3: [0, 0, 1]}
+        n = 0
+        for i in range(NUM_VERTICES - 1):
+            for j in range(i+1, NUM_VERTICES):
+                encoding[n] = self.matrix[i][j]
+                n += 1
+        for i in range(1, NUM_VERTICES - 1):
+            op = self.ops[i]
+            code = dic[op]
+            for j in code:
+                encoding[n] = code[j]
+                n += 1
+
+        return tuple(encoding)
+
     def get_paths(self):
         """ 
         return all paths from input to output
