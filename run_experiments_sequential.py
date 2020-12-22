@@ -127,7 +127,7 @@ def main(args):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Args for BANANAS experiments')
-    parser.add_argument('--trials', type=int, default=50, help='Number of trials')
+    parser.add_argument('--trials', type=int, default=100, help='Number of trials')
     parser.add_argument('--search_space', type=str, default='nasbench', \
         help='nasbench or darts')
     parser.add_argument('--algo_params', type=str, default='bananas_cus', help='which parameters to use')
