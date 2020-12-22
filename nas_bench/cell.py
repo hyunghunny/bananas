@@ -209,6 +209,38 @@ class Cell:
 
         return tuple(encoding)
 
+    def encode_custom(self):
+        """ 
+        compute the "custom" encoding to compare with,
+        i.e.  integer links + (one-hot coded) op list encoding 
+        """
+        encoding_length = (NUM_VERTICES - 1) + (OP_SPOTS * 3)
+        encoding = np.zeros((encoding_length))
+        dic = {CONV1X1: [0, 0, 0], CONV3X3: [0, 1, 0], MAXPOOL3X3: [0, 0, 1]}
+        n = 0
+        for i in range((NUM_VERTICES - 1)):
+            encoding[n] = self.bits_to_int(self.matrix[i])
+            n += 1
+        for i in range(1, NUM_VERTICES - 1):
+            op = self.ops[i]
+            code = dic[op]
+            for j in code:
+                encoding[n] = code[j]
+                n += 1
+        #print("Encoded: {}".format(encoding))
+        return tuple(encoding)
+
+    def bits_to_int(self, bit_list):
+        """Converts bit list to integer value"""
+        out = 0
+        for b in bit_list:
+            out = (out << 1) | b
+        return out
+
+    def bin_array(self, num, m):
+        """Convert a positive integer num into an m-bit bit vector"""
+        return np.array(list(np.binary_repr(num).zfill(m))).astype(np.int8).tolist()
+
     def get_paths(self):
         """ 
         return all paths from input to output

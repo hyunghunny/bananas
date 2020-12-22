@@ -69,6 +69,8 @@ class Data:
                 encoding = Cell(**arch).encode_standard()
             elif encoding_type == 'adj2':
                 encoding = Cell(**arch).encode_standard2()
+            elif encoding_type == 'cus':
+                encoding = Cell(**arch).encode_custom()
             elif encoding_type == 'path':
                 encoding = Cell(**arch).encode_paths()
             elif encoding_type == 'trunc_path':
